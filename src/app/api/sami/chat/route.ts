@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { searchKnowledge } from "@/lib/sami/knowledge";
+import { findTourismLocations } from "@/lib/sami/tourismLocations";
 import { SYSTEM_PROMPT, buildUserPrompt } from "@/lib/sami/prompts";
 import { classifyDomain } from "@/lib/sami/classifier";
 import { detectNavigationIntent } from "@/lib/sami/navigation";
@@ -98,11 +99,25 @@ export async function POST(request: NextRequest) {
       )
       .join("\n\n");
 
+    // ── Step 2b: Tourism Location Detection ────────────────────────
+    const tourismResults = findTourismLocations(trimmedMessage);
+    const tourismContext = tourismResults.length > 0
+      ? tourismResults.map(
+          (t) =>
+            `[LOKASI WISATA: ${t.name}]\nAlamat: ${t.address}\n${t.district}\n${t.description}\nGoogle Maps: ${t.googleMapsUrl}`
+        ).join("\n\n")
+      : "";
+
+    // Gabungkan context: knowledge + tourism lokasi
+    const fullContext = tourismContext
+      ? `${context}\n\n=== DATA LOKASI WISATA JEPARA (LOKASI AKURAT DENGAN GOOGLE MAPS) ===\n${tourismContext}\n=== AKHIR DATA LOKASI WISATA ===`
+      : context;
+
     // ── Step 3: Navigation Detection ──────────────────────────────
     const navigation = detectNavigationIntent(trimmedMessage);
 
     // ── Step 4: Build Prompt & Call Groq ──────────────────────────
-    const userPrompt = buildUserPrompt(trimmedMessage, context, history);
+    const userPrompt = buildUserPrompt(trimmedMessage, fullContext, history);
 
     const messages = [
       { role: "system" as const, content: SYSTEM_PROMPT },
