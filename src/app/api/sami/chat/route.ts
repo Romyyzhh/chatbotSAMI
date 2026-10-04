@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { searchKnowledge } from "@/lib/sami/knowledge";
-import { findTourismLocations } from "@/lib/sami/tourismLocations";
+import { findTourismLocations, findLocationForQuery } from "@/lib/sami/tourismLocations";
 import { SYSTEM_PROMPT, buildUserPrompt } from "@/lib/sami/prompts";
 import { classifyDomain } from "@/lib/sami/classifier";
 import { detectNavigationIntent } from "@/lib/sami/navigation";
@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
             "SAMI sedang menerima banyak permintaan. Silakan coba kembali beberapa saat lagi.",
           sources: [],
           navigation: null,
+          location: null,
         },
         { status: 429 }
       );
@@ -87,6 +88,7 @@ export async function POST(request: NextRequest) {
         domain: "OUT_OF_DOMAIN",
         sources: [],
         navigation: null,
+        location: null,
       });
     }
 
@@ -110,7 +112,7 @@ export async function POST(request: NextRequest) {
 
     // Gabungkan context: knowledge + tourism lokasi
     const fullContext = tourismContext
-      ? `${context}\n\n=== DATA LOKASI WISATA JEPARA (LOKASI AKURAT DENGAN GOOGLE MAPS) ===\n${tourismContext}\n=== AKHIR DATA LOKASI WISATA ===`
+      ? `${context}\n\n=== DATA LOKASI WISATA JEPARA (LOKASI AKURAT DENGAN GOOGLE MAPS) ===\n${tourismContext}\nATURAN DATA LOKASI: gunakan alamat di atas apa adanya. JANGAN menambahkan tahun pembangunan, angka, atau fakta sejarah yang tidak tercantum di data ini — jika tidak ada, cukup sampaikan deskripsi yang tertera.\n=== AKHIR DATA LOKASI WISATA ===`
       : context;
 
     // ── Step 3: Navigation Detection ──────────────────────────────
@@ -131,6 +133,10 @@ export async function POST(request: NextRequest) {
     const aiResponse = await chatCompletion(messages);
 
     // ── Step 5: Return JSON Response ──────────────────────────────
+    // Lokasi wisata yang benar-benar ditanyakan pengguna ikut dikirim
+    // agar UI bisa menampilkan tombol Google Maps yang akurat
+    const topLocation = findLocationForQuery(trimmedMessage);
+
     return NextResponse.json({
       response: aiResponse,
       domain,
@@ -139,6 +145,14 @@ export async function POST(request: NextRequest) {
         url: `https://samudra.jepara.go.id${k.url}`,
       })),
       navigation,
+      location: topLocation
+        ? {
+            name: topLocation.name,
+            address: topLocation.address,
+            district: topLocation.district,
+            googleMapsUrl: topLocation.googleMapsUrl,
+          }
+        : null,
     });
   } catch (error) {
     console.error("Chat API error:", error);
@@ -149,6 +163,7 @@ export async function POST(request: NextRequest) {
           "Maaf, SAMI sedang mengalami kendala saat memproses permintaan Anda. Silakan coba lagi beberapa saat.",
         sources: [],
         navigation: null,
+        location: null,
       },
       { status: 500 }
     );

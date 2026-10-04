@@ -177,17 +177,46 @@ Untuk data detail lengkap, kunjungi Dashboard Kependudukan di SAMUDRA.`,
 
 **Destinasi Wisata Unggulan Jepara:**
 - Kepulauan Karimunjawa (Taman Nasional Karimunjawa)
-- Pantai Bandengan (Pantai Ayu)
+- Pantai Bandengan
 - Benteng Portugis
 - Museum R.A. Kartini
 - Pulau Panjang
+- Pantai Kartini
 - Air Terjun Songgolangit
-- Gua Semar
 - Wisata Bahari dan Diving/Snorkeling
 
 Sumber data pariwisata dari Dinas Pariwisata dan Kebudayaan Kabupaten Jepara.`,
     url: "/data/pariwisata",
     keywords: ["pariwisata", "wisata", "objek wisata", "pantai", "karimunjawa", "kunjungan wisata", "hotel", "resto", "tiket wisata", "travel", "liburan", "jalan-jalan", "vacation", "tourism"],
+  },
+  {
+    id: "wisata-terkenal-jepara",
+    title: "Wisata Terkenal di Kabupaten Jepara",
+    content: `Berikut daftar objek wisata paling terkenal di Kabupaten Jepara beserta lokasinya (desa/kecamatan):
+
+**Sejarah & Budaya:**
+- **Benteng Portugis** — Desa Banyumanis, Kecamatan Donorojo (sekitar 45 km dari pusat kota). Benteng peninggalan kolonial di atas bukit batu tepi laut.
+- **Museum R.A. Kartini** — Jl. Kartini No. 1, Kecamatan Jepara, di pusat kota.
+- **Kawasan Industri Mebel Jepara** — Kecamatan Tahunan, sentra mebel dan ukiran.
+
+**Pantai & Bahari:**
+- **Kepulauan Karimunjawa** — Kecamatan Karimunjawa, Taman Nasional, terkenal untuk snorkeling dan diving.
+- **Pantai Bandengan** — Desa Bandengan, Kecamatan Jepara, sekitar 7 km utara pusat kota. Pantai pasir putih paling populer di Jepara.
+- **Pantai Kartini** — Kelurahan Bulu, Kecamatan Jepara, ikon kota dan pintu ke Pulau Panjang.
+- **Pulau Panjang** — Kelurahan Ujung Batu, Kecamatan Jepara, diakses dari Pelabuhan Kartini.
+- **Pantai Pailus** — Desa Karanggondang, Kecamatan Mlonggo.
+- **Pantai Blebak** — Desa Sekuro, Kecamatan Mlonggo, terkenal untuk sunset.
+- **Pantai Bondo (Ombak Mati)** — Desa Bondo, Kecamatan Bangsri.
+- **Pantai Teluk Awur** — Desa Telukawur, Kecamatan Tahunan.
+- **Pantai Keling** — Kecamatan Keling, pesisir timur Jepara.
+
+**Alam:**
+- **Air Terjun Songgolangit** — Dukuh Nglencer, Desa Bucu, Kecamatan Kembang, ketinggian sekitar 80 meter di lereng Gunung Muria.
+- **Pantai Suweru** — Desa Balong, Kecamatan Kembang, pantai pasir hitam.
+
+Untuk lokasi yang tidak tercantum di atas, sarankan pengguna mencari langsung lewat Google Maps. Jangan menebak-nebak desa atau kecamatan.`,
+    url: "/data/pariwisata",
+    keywords: ["wisata terkenal", "tempat wisata", "destinasi wisata", "rekomendasi wisata", "wisata populer", "objek wisata jepara", "pantai terkenal", "wisata apa", "liburan di jepara", "jalan jalan di jepara", "kunjungi wisata", "wisata alam", "wisata sejarah", "tempat wisata terkenal", "daftar wisata"],
   },
   {
     id: "hotel-jepara",

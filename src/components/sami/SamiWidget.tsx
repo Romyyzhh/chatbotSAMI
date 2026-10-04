@@ -23,6 +23,14 @@ interface Message {
   timestamp: number;
   sources?: Array<{ title: string; url: string }>;
   navigation?: { label: string; url: string; type: string } | null;
+  location?: TourismLocationInfo | null;
+}
+
+interface TourismLocationInfo {
+  name: string;
+  address: string;
+  district: string;
+  googleMapsUrl: string;
 }
 
 interface ApiResponse {
@@ -30,6 +38,7 @@ interface ApiResponse {
   domain: string;
   sources: Array<{ title: string; url: string }>;
   navigation: { label: string; url: string; type: string } | null;
+  location?: TourismLocationInfo | null;
 }
 
 // ─── Quick Questions ──────────────────────────────────────────────
@@ -183,11 +192,32 @@ function TypingIndicator() {
 }
 
 // ─── SourceRef ────────────────────────────────────────────────────
-function SourceRef({ sources, navigation }: { sources?: Message["sources"]; navigation?: Message["navigation"] }) {
-  if ((!sources || sources.length === 0) && !navigation) return null;
+function SourceRef({
+  sources,
+  navigation,
+  location,
+}: {
+  sources?: Message["sources"];
+  navigation?: Message["navigation"];
+  location?: Message["location"];
+}) {
+  if ((!sources || sources.length === 0) && !navigation && !location) return null;
 
   return (
     <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 5 }}>
+      {location && (
+        <a
+          href={location.googleMapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="sami-source-btn"
+          title={location.address}
+          style={{ width: "fit-content" }}
+        >
+          📍 {location.name} — {location.district}
+          <ExternalLink size={10} />
+        </a>
+      )}
       {sources && sources.length > 0 && (
         <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
           <span style={{ fontSize: 10.5, color: "#94a3b8", fontWeight: 500 }}>Sumber:</span>
@@ -255,7 +285,7 @@ function ChatMessage({ msg }: { msg: Message }) {
             </div>
           )}
         </div>
-        {!isUser && <SourceRef sources={msg.sources} navigation={msg.navigation} />}
+        {!isUser && <SourceRef sources={msg.sources} navigation={msg.navigation} location={msg.location} />}
       </div>
     </div>
   );
@@ -389,6 +419,7 @@ export default function SamiWidget() {
           timestamp: Date.now(),
           sources: data.sources || [],
           navigation: data.navigation || null,
+          location: data.location || null,
         };
 
         setMessages((prev) => [...prev, assistantMsg]);
